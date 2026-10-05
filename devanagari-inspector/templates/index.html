@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1F3A93">
+  <title>Devanagari Transliteration Inspector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand-mark" href="#top" aria-label="Devanagari Inspector home">द्</a>
+      <div class="brand-copy">
+        <p class="eyebrow">NLP COLLEGE PROJECT</p>
+        <h1>Devanagari Transliteration Inspector</h1>
+        <p class="subtitle">Script Swapper Checker <span aria-hidden="true">/</span> Shah &amp; Anchor Kutchhi Engineering College</p>
+      </div>
+      <span class="header-language">हिंदी · मराठी</span>
+    </div>
+  </header>
+
+  <main id="top" class="page-shell">
+    {% if dataset_error %}
+    <div class="notice error-notice" role="alert">Dataset unavailable: {{ dataset_error }}</div>
+    {% endif %}
+    <section class="workspace" aria-labelledby="input-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">01 / INSPECT</p>
+          <h2 id="input-heading">Your text, in Devanagari</h2>
+        </div>
+        <span class="input-limit">Up to 500 characters</span>
+      </div>
+      <label class="visually-hidden" for="roman-input">Romanized Hindi or Marathi text</label>
+      <textarea id="roman-input" maxlength="500" placeholder="mera naam shardul hai" spellcheck="false"></textarea>
+      <div class="input-meta"><span id="character-count">0 / 500</span><span>Romanized Hindi or Marathi</span></div>
+      <div class="action-row">
+        <label class="select-wrap" for="language-select">
+          <span class="visually-hidden">Choose language</span>
+          <select id="language-select">
+            <option value="auto">Auto detect</option>
+            <option value="hi">Hindi</option>
+            <option value="mr">Marathi</option>
+          </select>
+        </label>
+        <div class="action-buttons">
+          <button id="clear-button" class="button button-secondary" type="button">Clear</button>
+          <button id="convert-button" class="button button-primary" type="button"><span class="button-label">Convert &amp; Check</span><span class="button-spinner" aria-hidden="true"></span></button>
+        </div>
+      </div>
+      <div id="error-message" class="inline-error" role="alert" hidden></div>
+      <div class="examples-block">
+        <div class="examples-heading"><span>TRY AN EXAMPLE</span><span class="examples-hint">Click to fill</span></div>
+        <div id="example-chips" class="example-chips" aria-live="polite"><span class="muted-copy">Loading examples…</span></div>
+      </div>
+    </section>
+
+    <section id="results" class="results-section" aria-live="polite" hidden>
+      <div class="section-heading results-heading">
+        <div><p class="eyebrow">02 / RESULTS</p><h2>Inspection</h2></div>
+        <button id="copy-button" class="button button-secondary copy-button" type="button" aria-label="Copy converted sentence">Copy output</button>
+      </div>
+      <div class="output-panel">
+        <p class="output-label">DEVANAGARI OUTPUT</p>
+        <p id="output-sentence" class="output-sentence" lang="hi"></p>
+        <p id="confidence-note" class="confidence-note"></p>
+      </div>
+      <div class="summary-bar" id="summary-bar"></div>
+      <div class="word-panel">
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Roman word</th><th>Devanagari</th><th>Status</th><th>Suggestion</th></tr></thead>
+            <tbody id="word-results"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="highlight-panel">
+        <p class="output-label">ORIGINAL TEXT CHECK</p>
+        <p id="highlighted-input" class="highlighted-input"></p>
+        <p class="legend"><span class="legend-mark"></span> Needs review or was corrected</p>
+      </div>
+    </section>
+
+    <section class="lower-grid">
+      <article class="info-section">
+        <p class="eyebrow">THE METHOD</p>
+        <h2>How it works</h2>
+        <ol class="pipeline-list">
+          <li><span>01</span><div><strong>Preprocess</strong><p>Normalize Roman text and separate punctuation.</p></div></li>
+          <li><span>02</span><div><strong>Script detection</strong><p>Keep words already written in Devanagari.</p></div></li>
+          <li><span>03</span><div><strong>Dictionary check</strong><p>Match canonical words and known variants.</p></div></li>
+          <li><span>04</span><div><strong>Transliteration</strong><p>Convert unmatched words with the ITRANS scheme.</p></div></li>
+          <li><span>05</span><div><strong>Suggestion</strong><p>Rank nearby dictionary spellings for review.</p></div></li>
+          <li><span>06</span><div><strong>Output</strong><p>Combine the selected Devanagari word forms.</p></div></li>
+        </ol>
+      </article>
+      <article class="info-section dataset-section">
+        <p class="eyebrow">THE SOURCE</p>
+        <h2>Dataset</h2>
+        <p class="dataset-intro">A compact Hindi and Marathi word list with canonical spellings and common variants.</p>
+        <div id="dataset-stats" class="dataset-stats"><span class="muted-copy">Loading dataset…</span></div>
+        <p class="data-footnote">Sentence examples and word entries are read from the project CSV files.</p>
+      </article>
+    </section>
+    <footer class="site-footer"><span>Devanagari Transliteration Inspector</span><span>Shah &amp; Anchor Kutchhi Engineering College</span></footer>
+  </main>
+</body>
+</html>
